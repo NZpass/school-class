@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11 «А» Класс — Электронный журнал</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Экран входа -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <h1>🎓 11 «А» Класс</h1>
+            <h2>Вход в систему</h2>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Пароль" required>
+                <button type="submit" class="btn-login">Войти</button>
+            </form>
+            <p class="login-error" id="login-error"></p>
+            <p class="login-hint">
+                <strong>Тестовые аккаунты:</strong><br>
+                Админ: admin@school.ru / admin123<br>
+                Учитель: teacher@school.ru / teacher123<br>
+                Родитель: parent@school.ru / parent123
+            </p>
+        </div>
+    </div>
+
+    <!-- Основной интерфейс (скрыт до входа) -->
+    <div id="main-interface" style="display: none;">
+        <header class="header">
+            <div class="container header-content">
+                <div class="logo">🎓 11 «А» Класс</div>
+                <nav class="nav">
+                    <a href="#home" class="nav-link active">Главная</a>
+                    <a href="#schedule" class="nav-link">Расписание</a>
+                    <a href="#students" class="nav-link">Ученики</a>
+                    <a href="#teachers" class="nav-link">Учителя</a>
+                    <a href="#parents" class="nav-link">Родители</a>
+                    <a href="#gradebook" class="nav-link">📖 Журнал</a>
+                    <a href="#homework" class="nav-link">📚 ДЗ</a>
+                    <a href="#chat" class="nav-link">💬 Чат</a>
+                </nav>
+                <div class="user-info">
+                    <span id="user-role-badge" class="role-badge"></span>
+                    <span id="user-email" class="user-email"></span>
+                    <button id="logout-btn" class="btn-logout">Выйти</button>
+                </div>
+                <button class="mobile-menu-btn">☰</button>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- Главная -->
+            <section id="home" class="section active-section">
+                <h1 class="section-title">Добро пожаловать в систему управления классом</h1>
+                <div id="role-info" class="role-info-box"></div>
+            </section>
+
+            <!-- Расписание -->
+            <section id="schedule" class="section">
+                <h2 class="section-title">📅 Расписание занятий</h2>
+                <div class="admin-panel admin-only">
+                    <h3>Добавить урок</h3>
+                    <form id="schedule-form" class="inline-form">
+                        <select id="sch-day" required>
+                            <option value="Понедельник">Понедельник</option>
+                            <option value="Вторник">Вторник</option>
+                            <option value="Среда">Среда</option>
+                            <option value="Четверг">Четверг</option>
+                            <option value="Пятница">Пятница</option>
+                        </select>
+                        <input type="time" id="sch-time" required>
+                        <input type="text" id="sch-subject" placeholder="Предмет" required>
+                        <input type="text" id="sch-room" placeholder="Кабинет" required>
+                        <button type="submit" class="btn-add">+ Добавить</button>
+                    </form>
+                </div>
+                <div id="schedule-container" class="schedule-grid"></div>
+            </section>
+
+            <!-- Ученики -->
+            <section id="students" class="section">
+                <h2 class="section-title">👥 Ученики класса</h2>
+                <div class="admin-panel admin-only">
+                    <h3>Добавить ученика</h3>
+                    <form id="student-form" class="inline-form">
+                        <input type="text" id="st-name" placeholder="Фамилия Имя" required>
+                        <input type="number" id="st-grade" placeholder="Ср. балл (4.5)" step="0.1" min="2" max="5" required>
+                        <select id="st-status" required>
+                            <option value="excellent">Отличник</option>
+                            <option value="good">Хорошист</option>
+                            <option value="average">Троечник</option>
+                        </select>
+                        <button type="submit" class="btn-add">+ Добавить</button>
+                    </form>
+                </div>
+                <div id="students-container" class="students-grid"></div>
+            </section>
+
+            <!-- Учителя -->
+            <section id="teachers" class="section">
+                <h2 class="section-title">‍🏫 Учителя</h2>
+                <div class="admin-panel admin-only">
+                    <h3>Добавить учителя</h3>
+                    <form id="teacher-form" class="inline-form">
+                        <input type="text" id="tch-name" placeholder="ФИО Учителя" required>
+                        <input type="text" id="tch-subject" placeholder="Предмет" required>
+                        <input type="text" id="tch-phone" placeholder="Телефон" required>
+                        <button type="submit" class="btn-add">+ Добавить</button>
+                    </form>
+                </div>
+                <div id="teachers-container" class="teachers-grid"></div>
+            </section>
+
+            <!-- Родители -->
+            <section id="parents" class="section">
+                <h2 class="section-title">👪 Данные родителей</h2>
+                <div class="admin-panel admin-only">
+                    <h3>Добавить родителя</h3>
+                    <form id="parent-form" class="inline-form">
+                        <input type="text" id="pr-name" placeholder="ФИО Родителя" required>
+                        <input type="text" id="pr-child" placeholder="ФИО ребёнка (ученика)" required>
+                        <input type="tel" id="pr-phone" placeholder="Телефон" required>
+                        <button type="submit" class="btn-add">+ Добавить</button>
+                    </form>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ФИО Родителя</th>
+                                <th>Ребёнок</th>
+                                <th>Телефон</th>
+                                <th class="admin-only">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="parents-container"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Журнал -->
+            <section id="gradebook" class="section">
+                <h2 class="section-title">📖 Электронный журнал</h2>
+                <div class="admin-panel admin-only">
+                    <h3>Поставить оценку</h3>
+                    <form id="grade-form" class="inline-form">
+                        <select id="gr-student" required>
+                            <option value="">Выберите ученика...</option>
+                        </select>
+                        <select id="gr-subject" required>
+                            <option value="">Выберите предмет...</option>
+                        </select>
+                        <input type="date" id="gr-date" required>
+                        <select id="gr-value" required>
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="н">н (пропуск)</option>
+                        </select>
+                        <button type="submit" class="btn-add">Поставить</button>
+                    </form>
+                </div>
+                <div class="admin-panel" style="border-top-color: #6f42c1;">
+                    <h3>Просмотр журнала</h3>
+                    <div class="inline-form" style="align-items: center;">
+                        <label for="gb-subject-filter" style="margin-right: 10px; font-weight: 600;">Предмет:</label>
+                        <select id="gb-subject-filter" style="max-width: 250px;">
+                            <option value="all">Все предметы</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="gradebook-table" id="gradebook-table">
+                        <thead>
+                            <tr>
+                                <th>Загрузка данных...</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Домашние задания -->
+            <section id="homework" class="section">
+                <h2 class="section-title">📚 Домашние задания</h2>
+                <div class="admin-panel admin-only">
+                    <h3>Задать домашнее задание</h3>
+                    <form id="homework-form" class="inline-form">
+                        <select id="hw-subject" required>
+                            <option value="">Выберите предмет...</option>
+                        </select>
+                        <input type="date" id="hw-date" required>
+                        <input type="date" id="hw-deadline" required>
+                        <input type="text" id="hw-description" placeholder="Описание задания" required style="flex: 2;">
+                        <button type="submit" class="btn-add">+ Задать</button>
+                    </form>
+                </div>
+                <div class="admin-panel" style="border-top-color: #28a745;">
+                    <h3>Просмотр заданий</h3>
+                    <div class="inline-form" style="align-items: center;">
+                        <label for="hw-filter-subject" style="margin-right: 10px; font-weight: 600;">Предмет:</label>
+                        <select id="hw-filter-subject" style="max-width: 250px;">
+                            <option value="all">Все предметы</option>
+                        </select>
+                        <label for="hw-filter-date" style="margin-left: 20px; margin-right: 10px; font-weight: 600;">Дата:</label>
+                        <input type="date" id="hw-filter-date" style="max-width: 200px;">
+                        <button id="hw-clear-filter" class="btn-add" style="background: #6c757d;">Сбросить</button>
+                    </div>
+                </div>
+                <div id="homework-container" class="homework-grid"></div>
+                <div id="homework-empty" style="text-align: center; padding: 40px; color: #666; display: none;">
+                    <h3>📭 Домашних заданий пока нет</h3>
+                </div>
+            </section>
+
+            <!-- Чат (доступен всем) -->
+            <section id="chat" class="section">
+                <h2 class="section-title">💬 Чат: Учителя и Родители</h2>
+                <div class="chat-container">
+                    <div class="chat-role-selector">
+                        <label>Вы сейчас как:</label>
+                        <select id="chat-role">
+                            <option value="teacher">👨‍🏫 Учитель</option>
+                            <option value="parent">👪 Родитель</option>
+                        </select>
+                        <input type="text" id="chat-sender-name" placeholder="Ваше имя">
+                    </div>
+                    <div id="chat-messages" class="chat-messages"></div>
+                    <form id="chat-form" class="chat-form">
+                        <input type="text" id="chat-input" placeholder="Введите сообщение..." required autocomplete="off">
+                        <button type="submit" class="btn-send">Отправить</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2024-2025 11 «А» класс. Система управления.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+            const firebaseConfig = {
+            apiKey: "AIzaSyDTvzfbhQoJEw3gMoEz6E00FklkaCK9MDg",
+            authDomain: "school-8862.firebaseapp.com",
+            projectId: "school-8862",
+            storageBucket: "school-8862.firebasestorage.app",
+            messagingSenderId: "278427936741",
+            appId: "1:278427936741:web:2c5d9ae7092ab9159cf10c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        window.db = getFirestore(app); // Делаем базу доступной для script.js
+    </script>
+
+    <!-- 2. ОСНОВНОЙ СКРИПТ САЙТА -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
